@@ -3,10 +3,11 @@ module CryptographicHandshake
                 :encryption_key
   
   def initialize(public_key:)
-    @public_key = public_key
+    @public_key     = public_key
+    @encryption_key = nil
   end
 
-  def set_encryption_key(public_key:)
+  def generate_encryption_key(public_key:)
     @encryption_key = transform_subject_no(subject_no: public_key)
   end
 
@@ -45,8 +46,8 @@ class ComboBreaker
     door     = Room::Door.new(public_key: 2084668)
     key_card = Room::KeyCard.new(public_key: 3704642)
 
-    door.set_encryption_key(public_key: key_card.public_key)
-    key_card.set_encryption_key(public_key: door.public_key)
+    door.generate_encryption_key(public_key: key_card.public_key)
+    key_card.generate_encryption_key(public_key: door.public_key)
 
     puts door.encryption_key
     puts key_card.encryption_key
