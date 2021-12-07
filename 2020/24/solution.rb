@@ -10,6 +10,10 @@ class Tile
       @table
     end
 
+    def clear
+      @table = {}
+    end
+
     def all
       @table.values
     end
@@ -161,8 +165,8 @@ end
 
 module LobbyLayout
   class PartOne
-    def self.run!
-      File.readlines('puzzle_input_2.txt').each do |line|
+    def self.run!(puzzle_input:)
+      File.readlines(puzzle_input).each do |line|
         coordinate = CompassDirection::Series.from_initials(line.strip).to_coordinate
         tile = Tile.create_or_find_by(coordinate: coordinate)
         tile.flip!
@@ -186,7 +190,3 @@ module LobbyLayout
     end
   end
 end
-
-
-LobbyLayout::PartOne.run!
-LobbyLayout::PartTwo.run!(no_of_days: 100)
