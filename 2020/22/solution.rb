@@ -59,7 +59,10 @@ class Game
   end
 
   def play
-    raise "Method play must be implemented"
+    while winner.nil? 
+      play_round
+      determine_winner
+    end
   end
 
   def determine_winner
@@ -78,13 +81,6 @@ end
 
 
 class Combat < Game
-  def play
-    while winner.nil? 
-      play_round
-      determine_winner
-    end
-  end
-
   def play_round
     current_round = [player_1.deck.dup, player_2.deck.dup]
     rounds.push(current_round)
@@ -99,13 +95,6 @@ end
 
 
 class RecursiveCombat < Game
-  def play
-    while winner.nil? 
-      play_round
-      determine_winner
-    end
-  end
-
   def play_round
     current_round = [player_1.deck.dup, player_2.deck.dup]
     return @winner = player_1 if duplicate_round?(current_round)
