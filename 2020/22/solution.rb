@@ -71,6 +71,12 @@ class Game
     @winner = player_2 if player_1.deck.empty?
   end
 
+  def determine_round_winner
+    player_1_card > player_2_card ?
+      player_1.deck.concat([player_1_card, player_2_card]) :
+      player_2.deck.concat([player_2_card, player_1_card])
+  end
+
   def results
     puts "== Post-game results =="
     puts "Player 1's deck: #{player_1.deck.join(', ')}"
@@ -84,12 +90,8 @@ class Combat < Game
   def play_round
     current_round = [player_1.deck.dup, player_2.deck.dup]
     rounds.push(current_round)
-
-    player_1_card, player_2_card = player_1.play, player_2.play
-
-    player_1_card > player_2_card ?
-      player_1.deck.concat([player_1_card, player_2_card]) :
-      player_2.deck.concat([player_2_card, player_1_card])
+    @player_1_card, @player_2_card = player_1.play, player_2.play
+    determine_round_winner
   end
 end
 
@@ -98,17 +100,10 @@ class RecursiveCombat < Game
   def play_round
     current_round = [player_1.deck.dup, player_2.deck.dup]
     return @winner = player_1 if duplicate_round?(current_round)
+
     rounds.push(current_round)
-
     @player_1_card, @player_2_card = player_1.play, player_2.play
-
-    if play_subgame?
-      play_subgame
-    else
-      player_1_card > player_2_card ?
-        player_1.deck.concat([player_1_card, player_2_card]) :
-        player_2.deck.concat([player_2_card, player_1_card])
-    end
+    play_subgame? ? play_subgame : determine_round_winner
   end
 
   def duplicate_round?(round)
